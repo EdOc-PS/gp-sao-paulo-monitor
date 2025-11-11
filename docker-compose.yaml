@@ -25,6 +25,26 @@ services:
     container_name: ssvcp
     ports:
       - "5000:5000"
+
+  #ssacp
+  ssacp_01:
+    build: ./gp_backend/SACP
+    container_name: ssacp_01
+    ports:
+      - "18861:18861"
+
+  ssacp_02:
+    build: ./gp_backend/SACP
+    container_name: ssacp_02
+    ports:
+      - "18862:18861"
+
+  ssacp_03:
+    build: ./gp_backend/SACP
+    container_name: ssacp_03
+    ports:
+      - "18863:18861"
+   
   # #isccp
   # isccp_01:
   #   build: ./gp_backend/SCCP
@@ -54,31 +74,12 @@ services:
   #   depends_on:
   #     - mqtt
 
-  #ssacp
-  ssacp_01:
-    build: ./gp_backend/SACP
-    container_name: ssacp_01
-    ports:
-      - "18861:18861"
-
-  ssacp_02:
-    build: ./gp_backend/SACP
-    container_name: ssacp_02
-    ports:
-      - "18862:18861"
-
-  ssacp_03:
-    build: ./gp_backend/SACP
-    container_name: ssacp_03
-    ports:
-      - "18863:18861"
-
-  car_01:
-    build: ./gp_backend/cars
-    container_name: car_01
-    environment:
-      - CAR_ID=01
-      - MQTT_BROKER=mqtt
-    depends_on:
-      - mqtt
+  # car_01:
+  #   build: ./gp_backend/cars
+  #   container_name: car_01
+  #   environment:
+  #     - CAR_ID=01
+  #     - MQTT_BROKER=mqtt
+  #   depends_on:
+  #     - mqtt
 
