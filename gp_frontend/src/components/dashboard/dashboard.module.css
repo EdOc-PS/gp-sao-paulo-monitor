@@ -47,7 +47,10 @@
     outline: 0;
     border-bottom-color: red;
 }
-
+.dashboard_table_pilot{
+    display: flex;
+    justify-content: space-between;
+}
 .dashboard_table_container {
     background-color: #000;
     padding: 2.5rem 4rem 3.5rem 4rem;

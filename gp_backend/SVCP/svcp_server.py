@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app) 
 
 
-client = MongoClient("mongodb+srv://eduardo:tFX2vItCBmVpp0HG@edoc-cluster.pv0lxby.mongodb.net/?appName=edoc-cluster")
+client = MongoClient("mongodb://root:example@mongo:27017/")
 db = client["base_gp"]
 print(db.list_collection_names())
 collection_cars = db["cars"]

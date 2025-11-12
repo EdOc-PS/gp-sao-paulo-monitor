@@ -36,9 +36,14 @@ function Dashboard() {
         setSelectIsccps(e)
     }
     useEffect(() => {
-        handleGet()
-        console.log(selectIsccp);
+        const interval = setInterval(() => {
+            handleGet()
+            console.log(selectIsccp);
+        }, 2000)
 
+        return () => {
+            clearInterval(interval)
+        }
     }, [selectTeams, selectIsccp])
 
     return (
@@ -81,11 +86,16 @@ function Dashboard() {
                     </select>
 
                     {cars.map((car, carIndex) => (
-                        <div key={carIndex} style={{ marginBottom: "2rem" }}>
-                            <p style={{ fontWeight: "bold", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
-                                {car.driver}
-                            </p>
 
+                        <div key={carIndex} style={{ marginBottom: "2rem" }}>
+                            <div className={styles.dashboard_table_pilot}>
+                                <p style={{ fontWeight: "bold", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+                                    {car.driver}
+                                </p>
+                                <p style={{ fontWeight: "bold", fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+                                    Volta atual: {car.tire_readings[0]?.lapNumber}
+                                </p>
+                            </div>
                             <table className={styles.dashboard_table} >
                                 <thead>
                                     <tr>

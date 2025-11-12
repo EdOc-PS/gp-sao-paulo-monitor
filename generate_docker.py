@@ -31,5 +31,5 @@ for i in range(1, 25):
 compose = {"services": services}
 
 # Salvar YAML
-with open("./docker_generated.yml", "w") as f:
+with open("./docker-generated.yaml", "w") as f:
     yaml.dump(compose, f, default_flow_style=False, sort_keys=True)

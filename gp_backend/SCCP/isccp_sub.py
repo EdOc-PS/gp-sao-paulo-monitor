@@ -8,9 +8,11 @@ broker = "mqtt"
 port = 1883
 
 ISCCP_ID = os.getenv("ISCCP_ID")
-topic = f"/isccp/{ISCCP_ID}/tires"
-
 SSACP_LIST = ["ssacp_01", "ssacp_02", "ssacp_03"]
+
+assigned_ssacp = SSACP_LIST[(int(ISCCP_ID) - 1) % len(SSACP_LIST)]
+proxy = rpyc.connect(assigned_ssacp, 18861)
+print(f"[ISCCP_{ISCCP_ID}] esta conectado ao SSACP {assigned_ssacp}!")
 
 received_data = []
 
@@ -20,30 +22,24 @@ def on_message(client, userdata, msg):
         print(f"[ISCCP_{ISCCP_ID}] Recebido:")
         print(json.dumps(data, indent=4))
 
-
 mqtt_client = mqtt.Client()
 mqtt_client.on_message = on_message
 mqtt_client.connect(broker, port, 60)
-mqtt_client.subscribe(topic)
-print(f"[ISCCP_{ISCCP_ID}] Subscrito em {topic}")
+mqtt_client.subscribe(f"/isccp/{ISCCP_ID}/tires")
 mqtt_client.loop_start()
 
 
-assigned_ssacp = SSACP_LIST[(int(ISCCP_ID) - 1) % len(SSACP_LIST)]
-ssacp_conn = rpyc.connect(assigned_ssacp, 18861)
-print(f"[ISCCP_{ISCCP_ID}] ✅ Conectado ao SSACP {assigned_ssacp}!")
-
-def enviar_para_ssacp():
+def send_to_ssacp():
     global received_data
 
     if not received_data:
         return
 
-    ssacp_conn.root.submit_tire_data(ISCCP_ID, received_data.copy())
-    print(f"[ISCCP_{ISCCP_ID}] ✅ {len(received_data)} registros enviados para {assigned_ssacp}")
+    proxy.root.submit_tire_data(ISCCP_ID, received_data.copy())
+    print(f"[ISCCP_{ISCCP_ID}] {len(received_data)} registros enviados para o SSACP {assigned_ssacp}")
     received_data.clear()
 
 if __name__ == "__main__":
     while True:
-        enviar_para_ssacp()
-        time.sleep(5)
+        send_to_ssacp()
+        time.sleep(2)

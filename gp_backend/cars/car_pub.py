@@ -22,7 +22,7 @@ def gen_tire_data(compound="Macio"):
         "wear": random.randint(40, 70)
     }
 
-def gen_car(car_id=id, lap=1):
+def gen_car(car_id, lap):
     tire_data = {
         "frontLeft": gen_tire_data(),
         "frontRight": gen_tire_data(),
@@ -38,27 +38,23 @@ def gen_car(car_id=id, lap=1):
         "tireData": tire_data
     }
 
-def send_to_isccp():
+def send_to_isccp(lap):
     isccp_list = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"]
 
     for isccp in isccp_list:
-        car_data = gen_car() 
+        car_data = gen_car(id, lap) 
         car_data["sector"] = isccp 
-        topic = f"/isccp/{isccp}/tires"
         payload = json.dumps(car_data)
-
-        client.publish(topic, payload)
-        print(f"[CAR] → Enviado para tópico {topic}")
+        client.publish(f"/isccp/{isccp}/tires", payload)
+        print(f"O carro enviou para tópico /isccp/{isccp}/tires")
 
 def main(): 
     for lap in range(1, 72):
-        print(f"\n=== CARRO {id} — Lap {lap}/71 ===")
-        car_data = gen_car(id, lap)
-        send_to_isccp(car_data)
+        send_to_isccp(lap)
 
-        time.sleep(1)
+        time.sleep(5)
 
-    print(f"\n✅ Carro {id} finalizou 71 voltas")
+    print(f"\n✅ Carro {id} finalizou as voltas")
     client.disconnect()
 
 if __name__ == "__main__":
