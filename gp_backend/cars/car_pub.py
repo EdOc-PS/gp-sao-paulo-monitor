@@ -14,15 +14,15 @@ client = mqtt.Client()
 client.connect(broker, port, 60)
 client.loop_start()
 
-def gen_tire_data(compound="Macio"):
+def gen_tire_data():
     return {
         "temperature": round(random.uniform(95, 105), 1),
         "pressure": round(random.uniform(18.5, 19.8), 1),
-        "compound": compound,
+        "compound": random.choice["Macio", "Médio ", "Duro ", "Intermediário", "Puro"],
         "wear": random.randint(30, 70)
     }
 
-def gen_car(car_id, lap):
+def gen_car(id_pilot, lap):
     tire_data = {
         "frontLeft": gen_tire_data(),
         "frontRight": gen_tire_data(),
@@ -31,7 +31,7 @@ def gen_car(car_id, lap):
     }
 
     return {
-        "carId": car_id,
+        "carId": id_pilot,
         "lapNumber": lap,
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "speed": round(random.uniform(200, 230), 1),
@@ -45,7 +45,6 @@ def send_to_isccp(lap):
         car_data = gen_car(id, lap) 
         car_data["sector"] = isccp 
         client.publish(f"/isccp-{isccp}/tires", json.dumps(car_data))
-        print(f"O carro enviou para tópico /isccp-{isccp}/tires")
 
 def main(): 
     for lap in range(1, 72):
