@@ -12,11 +12,11 @@ for i in range(1, 16):
             f"ISCCP_ID={id_str}",
             "BROKER=mqtt",
         ],
-        "depends_on": ["mqtt", "ssacp_01", "ssacp_02", "ssacp_03", "mongo" ]
+        "depends_on": ["mqtt", "ssacp_01", "ssacp_02", "ssacp_03", "mongo_db1" ]
     }
 
 
-for i in range(1, 25):
+for i in range(1, 2):
     id_str = f"{i:02d}"
     services[f"car_{id_str}"] = {
         "build": "./gp_backend/cars",

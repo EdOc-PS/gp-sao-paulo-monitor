@@ -26,6 +26,8 @@ services:
     ports:
       - "5000:5000"
     depends_on:
+      # mongo_rs_init:
+      #   condition: service_healthy 
       mongo:
         condition: service_healthy
 
@@ -53,37 +55,99 @@ services:
       - "18863:18861"
     depends_on:
       - mongo
-   
-  mongo_db1:
-    image: mongo:6
-    container_name: mongo_db1
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./gp_backend/mongo-config/data1:/data/db
-      - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
 
-  mongo_db2:
-    image: mongo:6
-    container_name: mongo_db2
-    restart: always
-    ports:
-      - "27019:27017"
-    volumes:
-      - ./gp_backend/mongo-config/data2:/data/db
-      - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
+  # mongo_db1:
+  #   image: mongo:6
+  #   container_name: mongo_db1
+  #   restart: always
+  #   ports:
+  #     - "27018:27017"
+  #   command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+  #   volumes:
+  #     - ./gp_backend/mongo-config/data1:/data/db
+  #   healthcheck:
+  #     test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
+
+  # mongo_db2:
+  #   image: mongo:6
+  #   container_name: mongo_db2
+  #   restart: always
+  #   ports:
+  #     - "27019:27017"
+  #   command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+  #   volumes:
+  #     - ./gp_backend/mongo-config/data2:/data/db
+  #   healthcheck:
+  #     test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
 
   # mongo_db3:
-    # image: mongo:6
-    # container_name: mongo_db3
-    # restart: always
-    # ports:
-    #   - "27020:27017"
-    # volumes:
-    #   - ./gp_backend/mongo-config/data3:/data/db
-    #   - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
+  #   image: mongo:6
+  #   container_name: mongo_db3
+  #   restart: always
+  #   ports:
+  #     - "27020:27017"
+  #   command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+  #   volumes:
+  #     - ./gp_backend/mongo-config/data3:/data/db
+  #   healthcheck:
+  #     test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 5
 
+  # mongo_rs_init:
+  #   image: mongo:6
+  #   container_name: mongo_rs_init
+  #   depends_on:
+  #     mongo_db1:
+  #       condition: service_healthy
+  #     mongo_db2:
+  #       condition: service_healthy
+  #     mongo_db3:
+  #       condition: service_healthy
+      
+  #   volumes:
+  #     - ./gp_backend/mongo-config/mongo-init:/seed
+
+  #   entrypoint: >
+  #     bash -c "
+  #       echo 'Iniciando Replica Set...';
+
+  #       mongosh --host mongo_db1:27017 --eval '
+  #         rs.initiate({
+  #           _id: \"rs0\",
+  #           members: [
+  #             { _id: 0, host: \"mongo_db1:27017\", priority: 2 },
+  #             { _id: 1, host: \"mongo_db2:27017\", priority: 1 },
+  #             { _id: 2, host: \"mongo_db3:27017\", priority: 1 }
+  #           ]
+  #         });
+  #       ' || echo 'Replica Set já estava iniciado. Continuando...';
+
+  #       echo 'Aguardando election do PRIMARY...';
+
+  #       # Faz polling até aparecer um PRIMARY
+  #       until mongosh --quiet --host mongo_db1:27017 --eval \"rs.isMaster().ismaster\" | grep true > /dev/null; do
+  #         sleep 1
+  #       done
+
+  #       echo 'PRIMARY eleito! Executando seed...';
+
+  #       mongosh --host mongo_db1:27017 /seed/mongo-init.js;
+
+  #       echo 'Seed concluído com sucesso!';
+  #     "
+  #   healthcheck:
+  #     test: ["CMD", "mongosh", "--quiet", "--eval", "rs.isMaster().ismaster"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 10
 
   mongo:
     image: mongo:6
@@ -93,9 +157,9 @@ services:
       - "27017:27017"
     volumes:
       - ./gp_backend/mongo-config/data:/data/db
-      - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
+      - ./gp_backend/mongo-config/mongo-init:/docker-bd-initdb.d
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+      test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })" ]
       interval: 5s
       timeout: 3s
       retries: 5
