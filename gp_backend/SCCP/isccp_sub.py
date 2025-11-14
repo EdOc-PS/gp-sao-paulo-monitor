@@ -12,7 +12,7 @@ SSACP_LIST = ["ssacp_01", "ssacp_02", "ssacp_03"]
 
 assigned_ssacp = SSACP_LIST[(int(ISCCP_ID) - 1) % 3]
 proxy = rpyc.connect(assigned_ssacp, 18861)
-print(f"[ISCCP_{ISCCP_ID}] esta conectado ao SSACP {assigned_ssacp}")
+print(f"O ISCCP-{ISCCP_ID}] esta conectado ao {assigned_ssacp}")
 
 received_data = []
 
