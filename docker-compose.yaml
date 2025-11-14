@@ -157,7 +157,7 @@ services:
       - "27017:27017"
     volumes:
       - ./gp_backend/mongo-config/data:/data/db
-      - ./gp_backend/mongo-config/mongo-init:/docker-bd-initdb.d
+      - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
     healthcheck:
       test: [ "CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })" ]
       interval: 5s
