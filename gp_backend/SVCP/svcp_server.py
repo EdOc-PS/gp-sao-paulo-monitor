@@ -5,8 +5,9 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app) 
 
-
-client = MongoClient("mongodb://root:example@mongo:27017/")
+client = MongoClient("mongodb://mongo:27017/")
+# client = MongoClient("mongodb://root:root@mongo_db1:27017,mongo_db2:27017,mongo_db3:27017/?replicaSet=rs0")
+# client = MongoClient("mongodb://mongo_db1:27017/")
 db = client["base_gp"]
 print(db.list_collection_names())
 collection_cars = db["cars"]
@@ -22,11 +23,9 @@ def dashboard():
         query["team"] = team_filter
 
     cars = list(collection_cars.find(query))
-
     result = []
 
     for car in cars:
-
         tire_query = {"carId": car["_id"]}
         if sector_filter:
             tire_query["sector"] = sector_filter 

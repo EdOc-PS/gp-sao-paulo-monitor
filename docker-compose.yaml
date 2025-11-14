@@ -25,6 +25,9 @@ services:
     container_name: ssvcp
     ports:
       - "5000:5000"
+    depends_on:
+      mongo:
+        condition: service_healthy
 
   #ssacp
   ssacp_01:
@@ -32,28 +35,31 @@ services:
     container_name: ssacp_01
     ports:
       - "18861:18861"
+    depends_on:
+      - mongo
 
   ssacp_02:
     build: ./gp_backend/SACP
     container_name: ssacp_02
     ports:
       - "18862:18861"
+    depends_on:
+      - mongo
 
   ssacp_03:
     build: ./gp_backend/SACP
     container_name: ssacp_03
     ports:
       - "18863:18861"
-
+    depends_on:
+      - mongo
+   
   mongo_db1:
     image: mongo:6
     container_name: mongo_db1
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
     ports:
-      - "27018:27017" 
+      - "27017:27017"
     volumes:
       - ./gp_backend/mongo-config/data1:/data/db
       - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
@@ -62,54 +68,34 @@ services:
     image: mongo:6
     container_name: mongo_db2
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
     ports:
       - "27019:27017"
     volumes:
       - ./gp_backend/mongo-config/data2:/data/db
       - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
-    networks:
-      - gpnet
 
-  mongo_db3:
+  # mongo_db3:
+    # image: mongo:6
+    # container_name: mongo_db3
+    # restart: always
+    # ports:
+    #   - "27020:27017"
+    # volumes:
+    #   - ./gp_backend/mongo-config/data3:/data/db
+    #   - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
+
+
+  mongo:
     image: mongo:6
-    container_name: mongo_db3
+    container_name: mongo
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
     ports:
-      - "27020:27017"
+      - "27017:27017"
     volumes:
-      - ./gp_backend/mongo-config/data3:/data/db
+      - ./gp_backend/mongo-config/data:/data/db
       - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
-
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: unless-stopped
-    ports:
-      - "8081:8081"
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
-      ME_CONFIG_MONGODB_SERVER: mongo_db1
-      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
-    depends_on:
-      - mongo_db1
-
-
-  # mongo:
-  #   image: mongo:6
-  #   container_name: mongo
-  #   restart: always
-  #   ports:
-  #     - "27017:27017"    
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: root
-  #   volumes:
-  #     - ./gp_backend/mongo-config/data:/data/db           
-  #     - ./gp_backend/mongo-config/mongo-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
