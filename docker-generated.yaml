@@ -223,7 +223,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=01
     - BROKER=mqtt
@@ -235,7 +235,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=02
     - BROKER=mqtt
@@ -247,7 +247,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=03
     - BROKER=mqtt
@@ -259,7 +259,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=04
     - BROKER=mqtt
@@ -271,7 +271,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=05
     - BROKER=mqtt
@@ -283,7 +283,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=06
     - BROKER=mqtt
@@ -295,7 +295,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=07
     - BROKER=mqtt
@@ -307,7 +307,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=08
     - BROKER=mqtt
@@ -319,7 +319,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=09
     - BROKER=mqtt
@@ -331,7 +331,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=10
     - BROKER=mqtt
@@ -343,7 +343,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=11
     - BROKER=mqtt
@@ -355,7 +355,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=12
     - BROKER=mqtt
@@ -367,7 +367,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=13
     - BROKER=mqtt
@@ -379,7 +379,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=14
     - BROKER=mqtt
@@ -391,7 +391,7 @@ services:
     - ssacp_01
     - ssacp_02
     - ssacp_03
-    - mongo
+    - mongo_db1
     environment:
     - ISCCP_ID=15
     - BROKER=mqtt

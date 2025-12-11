@@ -1,0 +1,23 @@
+from pymongo import MongoClient
+
+try:
+    print("Conectando ao MongoDB...")
+
+    client = MongoClient("mongodb://mongo_db1:27017,mongo_db2:27017,mongo_db3:27017/?replicaSet=rs0")
+    db = client["base_gp"]
+    collection = db["cars"]
+
+    print("Conectado com sucesso!")
+
+    # Busca dados do piloto 01
+    piloto = collection.find_one({"_id": "01"})
+
+    if piloto:
+        print("Piloto encontrado:")
+        print(piloto)
+    else:
+        print("Nenhum documento encontrado para carId = 01")
+
+except Exception as e:
+    print("ERRO AO CONECTAR:")
+    print(e)

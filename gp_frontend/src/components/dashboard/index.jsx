@@ -39,7 +39,7 @@ function Dashboard() {
         const interval = setInterval(() => {
             handleGet()
             console.log(selectIsccp);
-        }, 2000)
+        }, 500)
 
         return () => {
             clearInterval(interval)

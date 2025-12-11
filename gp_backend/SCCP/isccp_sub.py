@@ -41,4 +41,4 @@ def send_to_ssacp():
 if __name__ == "__main__":
     while True:
         send_to_ssacp()
-        time.sleep(2)
+        time.sleep(0.25)

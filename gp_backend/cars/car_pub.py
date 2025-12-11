@@ -18,7 +18,7 @@ def gen_tire_data():
     return {
         "temperature": round(random.uniform(95, 105), 1),
         "pressure": round(random.uniform(18.5, 19.8), 1),
-        "compound": random.choice["Macio", "Médio ", "Duro ", "Intermediário", "Puro"],
+        "compound": random.choice(["Macio", "Médio ", "Duro ", "Intermediário", "Puro"]),
         "wear": random.randint(30, 70)
     }
 
@@ -50,7 +50,7 @@ def main():
     for lap in range(1, 72):
         send_to_isccp(lap)
 
-        time.sleep(5)
+        time.sleep(4)
 
     print(f"\nCarro {id} finalizou as voltas")
     client.disconnect()
